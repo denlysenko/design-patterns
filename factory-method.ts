@@ -1,31 +1,56 @@
-abstract class Creator {
-  public abstract factoryMethod(): Product;
+// Creator
+abstract class ButtonFactory {
+  public abstract createButton(): Button;
 }
 
-class ConcreteCreator1 extends Creator {
-  factoryMethod() {
-    return new ConcreteProduct1();
+// Concrete Creator
+class WinButtonFactory extends ButtonFactory {
+  createButton() {
+    return new WinButton();
   }
 }
 
-class ConcreteCreator2 extends Creator {
-  factoryMethod() {
-    return new ConcreteProduct2();
+// Concrete Creator
+class MacOSButtonFactory extends ButtonFactory {
+  createButton() {
+    return new MacOSButton();
   }
 }
 
-interface Product {
-  operation(): string;
+// Product
+interface Button {
+  paint(): void;
 }
 
-class ConcreteProduct1 implements Product {
-  operation() {
-    return 'from concrete product 1';
+// Concrete Product
+class WinButton implements Button {
+  paint() {
+    console.log('windows button paints');
   }
 }
 
-class ConcreteProduct2 implements Product {
-  operation() {
-    return 'from concrete product 2';
+// Concrete Product
+class MacOSButton implements Button {
+  paint() {
+    console.log('MacOS button paints');
   }
 }
+
+class App {
+  public button: Button;
+
+  private buttonFactory: ButtonFactory;
+
+  constructor(os: string) {
+    if (os === 'macos') {
+      this.buttonFactory = new MacOSButtonFactory();
+    } else if (os === 'win') {
+      this.buttonFactory = new WinButtonFactory();
+    }
+
+    this.button = this.buttonFactory.createButton();
+  }
+}
+
+const app = new App('macos');
+app.button.paint();
