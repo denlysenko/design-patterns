@@ -1,24 +1,37 @@
-class Prototype {
-  public primitive: any;
-  public component: object;
-  public circularReference: ComponentWithBackReference;
+// Prototype interface
+interface Copyable {
+  clone(): Object;
+}
 
-  public clone(): this {
-    const clone = Object.create(this);
-    clone.component = Object.create(this.component);
-    clone.circularReference = {
-      ...this.circularReference,
-      prototype: { ...this }
-    };
+// Concrete Prototype
+class Project implements Copyable {
+  constructor(
+    public id: number,
+    public name: string,
+    public sourceCode: string
+  ) {}
 
-    return clone;
+  setId(id: number) {
+    this.id = id;
+  }
+
+  setName(name: string) {
+    this.name = name;
+  }
+
+  setSourceCode(sourceCode: string) {
+    this.sourceCode = sourceCode;
+  }
+
+  clone() {
+    const copy = new Project(this.id, this.name, this.sourceCode);
+    return copy;
   }
 }
 
-class ComponentWithBackReference {
-  public prototype: Prototype;
+// usage
+const project = new Project(1, 'Test', 'console.log("test")');
 
-  constructor(prototype: Prototype) {
-    this.prototype = prototype;
-  }
-}
+const projectClone = project.clone();
+projectClone.setId(2);
+projectClone.setSourceCode('console.log("updated test")');
